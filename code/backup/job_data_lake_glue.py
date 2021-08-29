@@ -110,8 +110,7 @@ def convert_parquet(table_data_lake, table_flat_file, mode, is_partition, partit
         df_Transform0 = Transform0.toDF()
         if is_partition == "y":
             columns = partition_columns.replace(" ", "").split(",")
-            df_Transform0.write.format("parquet").partitionBy(
-                columns).mode("overwrite").parquet(bucket)
+            df_Transform0.write.format("parquet").partitionBy(columns).mode("append").parquet(bucket)
         else:
             df_Transform0.write.format("parquet").mode(mode).parquet(bucket)
         print(
