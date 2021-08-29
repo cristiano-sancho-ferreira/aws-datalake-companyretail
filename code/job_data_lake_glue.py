@@ -20,14 +20,13 @@ job.init(args['JOB_NAME'], args)
 environment_region = glueContext._jvm.AWSConnectionUtils.getRegion()
 interfacegroup = args['interfacegroup']
 
-bucket_data_lake = "{}-{}-analytics-{}".format(args['company'], args['business'], args['environment'])
-bucket_data_raw = "{}-{}-raw-{}".format(args['company'], args['business'], args['environment'])
-bucket_data_arch = "{}-{}-arch-{}".format(args['company'], args['business'], args['environment'])
-bucket_data_script = "{}-{}-glue-script".format(args['company'], args['business'], args['environment'])
+bucket_data_lake = "{}-{}-{}-lake".format(args['company'], args['business'], args['environment'])
+bucket_data_raw = "{}-{}-{}-raw".format(args['company'], args['business'], args['environment'])
+bucket_data_arch = "{}-{}-{}-arch".format(args['company'], args['business'], args['environment'])
+bucket_data_script = "{}-{}-{}-code".format(args['company'], args['business'], args['environment'])
 
-database_name_lake = "{}_{}_analytics_{}".format(args['company'], args['business'], args['environment'])
-database_name_raw = "{}_{}_raw_{}".format(args['company'], args['business'], args['environment'])
-database_name_arch = "{}_{}_arch_{}".format(args['company'], args['business'], args['environment'])
+database_name_lake = "{}_{}_{}_analytics".format(args['company'], args['business'], args['environment'])
+database_name_raw = "{}_{}_{}_raw".format(args['company'], args['business'], args['environment'])
 
 has_error = False
 error_return = False

@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE csancho_datalake_raw_dev.niv_niv4_flatfile (
+CREATE EXTERNAL TABLE csancho_datalake_dev_raw.niv_niv4_flatfile (
 operacion_cd VARCHAR(1),
 secuencial VARCHAR(10),
 merc_nivel4_cd VARCHAR(16),

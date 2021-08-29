@@ -1,3 +1,12 @@
+resource "aws_glue_catalog_database" "glue_database_raw" {
+  name = var.glue_database_raw
+}
+
+resource "aws_glue_catalog_database" "glue_database_lake" {
+  name = var.glue_database_analytics
+}
+
+
 resource "aws_glue_job" "job-csancho" {
   name         = "job-csancho-datalake"
   role_arn     = aws_iam_role.glue_role.arn

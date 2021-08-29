@@ -31,3 +31,11 @@ variable "bucket_arch_data" {
 variable "bucket_code_data" {
   default = "csancho-datalake-dev-code"
 }
+
+variable "glue_database_raw" {
+  default = "csancho_datalake_dev_raw"
+}
+
+variable "glue_database_analytics" {
+  default = "csancho_datalake_dev_analytics"
+}

@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE csancho_datalake_analytics_dev.centro_centro (
+CREATE EXTERNAL TABLE csancho_datalake_dev_analytics.centro_centro (
 operacion_cd VARCHAR(1),
 centro_cd VARCHAR(10),
 centro_nombre VARCHAR(100),
@@ -29,4 +29,4 @@ sociedad_cd VARCHAR(4),
 virtual varchar(1), 
 descripcion_corta varchar(255))
 STORED AS PARQUET
-LOCATION 's3://csancho-datalake-analytics-dev/centro_centro'
+LOCATION 's3://csancho-datalake-dev-lake/centro_centro'
