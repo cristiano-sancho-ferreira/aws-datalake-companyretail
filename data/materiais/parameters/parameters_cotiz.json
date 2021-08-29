@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_cotiz","TableDataLake":"cotiz_enc","TableFlatFile":"cotiz_enc_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_cot, centro_cd"}		
+{"InterfaceGroup":"datalake_cotiz","TableDataLake":"cotiz_det","TableFlatFile":"cotiz_det_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_cot, local_despacho_cd"}		

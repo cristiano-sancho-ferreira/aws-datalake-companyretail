@@ -1,0 +1,4 @@
+{"InterfaceGroup":"datalake_cli","TableDataLake":"cli_mot1","TableFlatFile":"cli_mot1_flatfile","Source":"mot","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_cli","TableDataLake":"cli_mot2","TableFlatFile":"cli_mot2_flatfile","Source":"mot","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_cli","TableDataLake":"clientes_fidelidad","TableFlatFile":"clientes_fidelidad_flatfile","Source":"fid","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_cli","TableDataLake":"clientes_th","TableFlatFile":"clientes_th_flatfile","Source":"bnk","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

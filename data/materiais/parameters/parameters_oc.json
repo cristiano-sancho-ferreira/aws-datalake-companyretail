@@ -1,0 +1,3 @@
+{"InterfaceGroup":"datalake_oc","TableDataLake":"oc_enc","TableFlatFile":"oc_enc_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_modificacion, centro_transf_interna"}		
+{"InterfaceGroup":"datalake_oc","TableDataLake":"oc_det","TableFlatFile":"oc_det_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_modificacion, almacen_cd"}		
+{"InterfaceGroup":"datalake_oc","TableDataLake":"oc_dplan","TableFlatFile":"oc_dplan_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_entrega, reparto_nro"}		

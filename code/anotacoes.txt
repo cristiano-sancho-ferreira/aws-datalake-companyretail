@@ -1,0 +1,24 @@
+
+--interfacegroup=	datalake_centro
+database_source=alelo_bi_dev_dataraw
+table_source = 'vta_enc_flatfile'
+
+database_source = alelo_bi_dev_dataraw
+table_source = 'centro_centro_flatfile'
+
+
+
+2021-04-10 01:48:54,855 ERROR [main] glue.ProcessLauncher (Logging.scala:logError(70)): Error from Python:Traceback (most recent call last):
+  File "/tmp/Untitled job.py", line 35, in <module>
+    table_map = get_table_map(table_source)
+  File "/tmp/Untitled job.py", line 27, in get_table_map
+    column_mapping = translate_data_type(column['Name'], column['Type'])
+NameError: name 'translate_data_type' is not defined
+
+
+response = client.get_table(DatabaseName=database_source, Name=table_source)
+
+==> 43763
+
+
+python frota_cleanup_athena.py "{'s3_raw_bucket':'csancho-datalake-raw-dev','s3_raw_bucket_path':'sancho/dev/','database_name':'csancho_datalake_raw_dev','table':'','sql_files_directory':'ddl/','athena_query_output':'s3://aws-athena-resultquery/'}"

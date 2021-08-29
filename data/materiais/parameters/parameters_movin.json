@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_movin","TableDataLake":"movin_motin","TableFlatFile":"movin_motin_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_movin","TableDataLake":"movin_movin","TableFlatFile":"movin_movin_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_entrada_cbte, centro_cd"}		

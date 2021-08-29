@@ -1,0 +1,217 @@
+AWSTemplateFormatVersion : 2010-09-09
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "S3 Buckets"
+        Parameters:
+          - RAWDATABUCKETNAME
+          - RawDataBucketLifecycleEnabled
+          - RawDataBucketLifecycleDaysToGlacier
+          - DATALAKEBUCKETNAME
+          - LOADDATABUCKETNAME      
+          - LoadDataBucketLifecycleDaysToDelete
+          - LoadDataBucketLifecycleEnabled
+          - commonScriptsBucket
+ 
+    ParameterLabels:
+      
+      #Raw Data Bucket Configuration      
+      RAWDATABUCKETNAME:
+        default: "Raw data bucket name"
+      RawDataBucketLifecycleEnabled:
+        default: "Lifecycle Configuration Enabled for RAW"
+      RawDataBucketLifecycleDaysToGlacier:
+        default: "Days until move RAW data to GLACIER"
+
+      #Data lake Bucket Configuration      
+      DATALAKEBUCKETNAME:
+        default: "Datalake bucket name"
+
+      LOADDATABUCKETNAME  :
+        default: "Load data bucket name"
+      LoadDataBucketLifecycleDaysToDelete:
+        default: "Days until delete object from LOADDATA"
+      LoadDataBucketLifecycleEnabled:
+        default: "Lifecycle Configuration Enabled for LOADDATA"      
+
+      commonScriptsBucket:
+        default: "Bucket where the scripts are located"
+
+Parameters:      
+ 
+  #RAW DATA BUCKET CONFIGURATION  
+  RAWDATABUCKETNAME:
+    Type: String
+    Default: cencosud-rawdate-12345678901234567890
+    Description: S3 Bucket for raw data
+
+  RawDataBucketLifecycleEnabled:
+    Type: String
+    Default: Disabled
+    Description: Raw Data Days enabled
+    AllowedValues:
+      - Disabled
+      - Enabled
+
+  RawDataBucketLifecycleDaysToGlacier:
+    Type: String
+    Default: 89
+    Description: Raw Data Days to be Deleted
+
+  #DATA LAKE BUCKET CONFIGURATION
+  DATALAKEBUCKETNAME:
+    Type: String
+    Default: cencosud-datalake-12345678901234567890
+    Description: S3 Bucket for data lake
+ 
+  #LOAD DATA BUCKET CONFIGURATION
+  LOADDATABUCKETNAME:  
+    Type: String
+    Default: cencosud-loaddata-12345678901234567890
+    Description: S3 Bucket for load data
+
+  LoadDataBucketLifecycleDaysToDelete:
+    Type: String
+    Default: 90
+    Description: Load Data Days to be Deleted
+ 
+  LoadDataBucketLifecycleEnabled:
+    Type: String
+    Default: Disabled
+    Description: Load Data Days enabled
+    AllowedValues:
+      - Disabled
+      - Enabled
+
+ 
+  commonScriptsBucket:
+    Type: String
+    Default: cencosud-scripts-12345678901234567890
+    Description: S3 Bucket for common scripts
+
+Resources:
+  RawDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref RAWDATABUCKETNAME
+      BucketEncryption:
+        ServerSideEncryptionConfiguration: 
+          - ServerSideEncryptionByDefault: 
+              SSEAlgorithm: AES256
+ 
+      AccessControl: Private
+      LifecycleConfiguration:
+        Rules:
+          - Id: RawDataBucketLifecycle
+            Status: !Ref RawDataBucketLifecycleEnabled
+            Transitions:
+              - StorageClass: GLACIER
+                TransitionInDays: !Ref RawDataBucketLifecycleDaysToGlacier
+#      DeletionPolicy: "Retain"
+
+  DataLakeBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DATALAKEBUCKETNAME
+      BucketEncryption:
+        ServerSideEncryptionConfiguration: 
+          - ServerSideEncryptionByDefault: 
+              SSEAlgorithm: AES256      
+      AccessControl: Private
+#      DeletionPolicy: "Retain"
+
+
+
+  LoadDataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref LOADDATABUCKETNAME
+      AccessControl: Private
+      LifecycleConfiguration:
+        Rules:
+          - Id: LoadDataBucketLifecycle
+            ExpirationInDays: !Ref LoadDataBucketLifecycleDaysToDelete          
+            Status: !Ref LoadDataBucketLifecycleEnabled
+#      DeletionPolicy: "Retain"
+
+  scriptsBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref commonScriptsBucket
+  
+  encryptionRAWpolicy: 
+    Type: "AWS::S3::BucketPolicy"
+    Properties: 
+      Bucket: 
+        Ref: "RawDataBucket"
+      PolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Id": "PutObjPolicy",
+          "Statement": [
+            {
+              "Sid": "DenyIncorrectEncryptionHeader",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": "arn:aws:s3:::${RawDataBucket}/*",
+              "Condition": {
+                "StringNotEquals": {
+                  "s3:x-amz-server-side-encryption": "AES256"
+                }
+              }
+            },
+            {
+              "Sid": "DenyUnEncryptedObjectUploads",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": "arn:aws:s3:::${RawDataBucket}/*",
+              "Condition": {
+                "Null": {
+                  "s3:x-amz-server-side-encryption": "true"
+                }
+              }
+            }
+          ]
+        }
+      
+  encryptionDATApolicy: 
+    Type: "AWS::S3::BucketPolicy"
+    Properties: 
+      Bucket: 
+        Ref: "DataLakeBucket"
+      PolicyDocument: !Sub |
+        {
+          "Version": "2012-10-17",
+          "Id": "PutObjPolicy",
+          "Statement": [
+            {
+              "Sid": "DenyIncorrectEncryptionHeader",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": "arn:aws:s3:::${DataLakeBucket}/*",
+              "Condition": {
+                "StringNotEquals": {
+                  "s3:x-amz-server-side-encryption": "AES256"
+                }
+              }
+            },
+            {
+              "Sid": "DenyUnEncryptedObjectUploads",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": "arn:aws:s3:::${DataLakeBucket}/*",
+              "Condition": {
+                "Null": {
+                  "s3:x-amz-server-side-encryption": "true"
+                }
+              }
+            }
+          ]
+        }      

@@ -1,0 +1,3 @@
+{"InterfaceGroup":"datalake_prov","TableDataLake":"prov_prov","TableFlatFile":"prov_prov_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_prov","TableDataLake":"prov_surtp","TableFlatFile":"prov_surtp_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}	
+{"InterfaceGroup":"datalake_prov","TableDataLake":"prov_saldo","TableFlatFile":"prov_saldo_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"Fecha_saldo"}		

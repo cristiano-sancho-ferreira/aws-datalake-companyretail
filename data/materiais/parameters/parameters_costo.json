@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_costo","TableDataLake":"costo_costoprov","TableFlatFile":"costo_costoprov_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_modif, centro_cd"}	
+{"InterfaceGroup":"datalake_costo","TableDataLake":"cpp_cpp","TableFlatFile":"cpp_cpp_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_inc_validez, centro_cd"}	

@@ -1,0 +1,6 @@
+{"InterfaceGroup":"datalake_arti","TableDataLake":"arti_arti","TableFlatFile":"arti_arti_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_arti","TableDataLake":"arti_artp","TableFlatFile":"arti_artp_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_arti","TableDataLake":"arti_ean","TableFlatFile":"arti_ean_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}
+{"InterfaceGroup":"datalake_arti","TableDataLake":"impu_mimp","TableFlatFile":"impu_mimp_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_arti","TableDataLake":"ume_umarti","TableFlatFile":"ume_umarti_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}
+{"InterfaceGroup":"datalake_arti","TableDataLake":"arti_pack","TableFlatFile":"arti_pack_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}

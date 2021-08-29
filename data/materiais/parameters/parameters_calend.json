@@ -1,0 +1,3 @@
+{"InterfaceGroup":"datalake_calend","TableDataLake":"calend_calend","TableFlatFile":"calend_calend_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_calend","TableDataLake":"calend_comp","TableFlatFile":"calend_comp_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_calend","TableDataLake":"calend_hour","TableFlatFile":"calend_hour_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}	

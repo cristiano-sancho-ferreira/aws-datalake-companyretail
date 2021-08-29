@@ -1,0 +1,4 @@
+{"InterfaceGroup":"datalake_inv","TableDataLake":"inv_enc","TableFlatFile":"inv_enc_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_inventario, centro_cd"}		
+{"InterfaceGroup":"datalake_inv","TableDataLake":"inv_det","TableFlatFile":"inv_det_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_inventario, centro_cd"}
+{"InterfaceGroup":"datalake_inv","TableDataLake":"inv_ubiarti","TableFlatFile":"inv_ubiarti_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}	
+{"InterfaceGroup":"datalake_inv","TableDataLake":"inv_mubi","TableFlatFile":"inv_mubi_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}	

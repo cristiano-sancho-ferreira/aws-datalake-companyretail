@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_gnx_prov","TableDataLake":"prov_plat","TableFlatFile":"prov_plat_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_gnx_prov","TableDataLake":"prov_csg","TableFlatFile":"prov_csg_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

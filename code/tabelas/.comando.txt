@@ -1,0 +1,1 @@
+python frota_cleanup_athena.py "{'s3_raw_bucket':'csancho-datalake-raw-dev','s3_raw_bucket_path':'sancho/dev/','database_name':'csancho_datalake_raw_dev','table':'','sql_files_directory':'ddl/','athena_query_output':'s3://aws-athena-resultquery/'}"

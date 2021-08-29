@@ -1,0 +1,383 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+################################################################################################################
+##
+##
+##
+################################################################################################################
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "[   Networking   ]   VPC Details"
+        Parameters:
+          - NetworkStackName
+      
+        Label:
+          default: "[   S3   ] Buckets"
+        Parameters:
+          - RAWDATABUCKETNAME
+          - RawDataBucketLifecycleEnabled
+          - RawDataBucketLifecycleDaysToGlacier
+          - DATALAKEBUCKETNAME
+          - LOADDATABUCKETNAME      
+          - LoadDataBucketLifecycleDaysToDelete
+          - LoadDataBucketLifecycleEnabled
+          - commonScriptsBucket
+
+      - Label:
+          default: 'Redshift Configuration'
+        Parameters:
+          - RedshiftDatabaseName
+          - RedshiftDatabaseUsername
+          - RedshiftDatabasePassword
+          - RedshiftNodeType
+          - RedshiftClusterType
+          - RedshiftNumberOfNodes
+
+      - Label:
+          default: 'SqlExecutor Configuration'
+        Parameters:
+          - queryKeyPair
+
+    ParameterLabels:
+      #NETWORKING Parameter Labels      
+      NetworkStackName:
+        default: "cloud formation stack name with vpc elements"
+
+      #Bucket Configuration
+
+      #Raw Data Bucket Configuration      
+      RAWDATABUCKETNAME:
+        default: "Raw data bucket name"
+      RawDataBucketLifecycleEnabled:
+        default: "Lifecycle Configuration Enabled for RAW"
+      RawDataBucketLifecycleDaysToGlacier:
+        default: "Days until move RAW data to GLACIER"
+
+      #Data lake Bucket Configuration      
+      DATALAKEBUCKETNAME:
+        default: "Datalake bucket name"
+
+      LOADDATABUCKETNAME  :
+        default: "Load data bucket name"
+      LoadDataBucketLifecycleDaysToDelete:
+        default: "Days until delete object from LOADDATA"
+      LoadDataBucketLifecycleEnabled:
+        default: "Lifecycle Configuration Enabled for LOADDATA"      
+
+      commonScriptsBucket:
+        default: "Bucket where the scripts are located"
+
+      #Redshift Configuration
+      RedshiftDatabaseName:
+        default: Redshift | Database Name
+      RedshiftDatabaseUsername:
+        default: Redshift | Master user name
+      RedshiftDatabasePassword:
+        default: Redshift | Master user password
+      RedshiftNodeType:
+        default: Redshift | Node Type
+      RedshiftClusterType:
+        default: Redshift | Cluster Type
+      RedshiftNumberOfNodes:
+        default: Redshift | Number of compute nodes
+      createCluster:
+        default: Redshift | is the redshift cluster created or not
+
+
+      queryKeyPair:
+        default: SqlExecutor | Key pair to use
+
+################################################################################################################
+##
+##
+##
+################################################################################################################
+Parameters:
+
+  NetworkStackName:
+    Description: cloud formation stack name with vpc elements
+    Type: String
+ 
+  RAWDATABUCKETNAME:
+    Type: String
+    Default: cencosud-rawdate-12345678901234567890
+    Description: S3 Bucket for raw data
+
+  DATALAKEBUCKETNAME:
+    Type: String
+    Default: cencosud-datalake-12345678901234567890
+    Description: S3 Bucket for data lake
+
+  LOADDATABUCKETNAME:  
+    Type: String
+    Default: cencosud-loaddata-12345678901234567890
+    Description: S3 Bucket for load data
+
+  #RAW DATA BUCKET CONFIGURATION  
+  
+  RawDataBucketLifecycleEnabled:
+    Type: String
+    Default: Disabled
+    Description: Raw Data Days enabled
+    AllowedValues:
+      - Disabled
+      - Enabled
+
+  RawDataBucketLifecycleDaysToGlacier:
+    Type: String
+    Default: 89
+    Description: Raw Data Days to be send to glacier
+
+
+  #LOAD DATA BUCKET CONFIGURATION
+  LoadDataBucketLifecycleDaysToDelete:
+    Type: String
+    Default: 90
+    Description: Load Data Days to be Deleted
+ 
+  LoadDataBucketLifecycleEnabled:
+    Type: String
+    Default: Disabled
+    Description: Load Data Days enabled
+    AllowedValues:
+      - Disabled
+      - Enabled
+  
+  commonScriptsBucket:
+    Type: String
+    Description: Bucket where the scripts are located
+  
+  RedshiftDatabaseName:
+    Default: fourinsightsdw
+    AllowedPattern: '[a-zA-Z0-9]+'
+    ConstraintDescription: must contain only alphanumeric characters.
+    Description: 'The database instance name. (default: fourinsightsdw)'
+    MaxLength: '16'
+    MinLength: '3'
+    Type: String
+ 
+  RedshiftDatabaseUsername:
+    Default: admin
+    AllowedPattern: '[a-zA-Z0-9]+'
+    ConstraintDescription: must contain only alphanumeric characters.
+    Description: 'The database admin account user name. (default: admin)'
+    MaxLength: '16'
+    MinLength: '1'
+    Type: String
+  
+  RedshiftDatabasePassword:
+    AllowedPattern: >-
+      ^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$
+    ConstraintDescription: >-
+      Must contain alphanumeric characters, uppercase letters, lowercase
+      letters, at least one number and at least one special character
+    Description: The database admin account password.
+    MaxLength: '41'
+    MinLength: '8'
+    NoEcho: 'true'
+    Type: String
+  
+  RedshiftNodeType:
+    Default: dc1.large
+    AllowedValues:
+      - dc1.large
+      - dc1.8xlarge
+      - dc2.large
+      - dc2.8xlarge      
+      - ds2.xlarge
+      - ds2.8xlarge
+      - ds1.xlarge
+      - ds1.8xlarge
+    Description: The instance type to use for the redshift.
+    Type: String
+  
+  RedshiftClusterType:
+    Default: single-node
+    AllowedValues:
+      - single-node
+      - multi-node
+    Description: The type of cluster
+    Type: String
+  
+  RedshiftNumberOfNodes:
+    Default: 1
+    Description: >-
+      The number of compute nodes in the cluster, only for the "multi-node"
+      (min: 2, max: 32)
+    MaxValue: 32
+    MinValue: 1
+    Type: Number
+
+  createCluster:
+    Default: "true"
+    Type: String
+    AllowedValues:
+      - "true"
+      - "false"
+
+  queryKeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Key pair to use for query executor
+
+Conditions:
+  createRedshiftResources:
+    Fn::Equals:
+    - Ref: createCluster
+    - "true"
+
+    
+################################################################################################################
+##
+##
+##
+################################################################################################################
+Resources:
+  MainVPCStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/cencosud-cloudformation-templates/t10-secgroups-v0.2.yaml
+      Parameters:
+        NetworkStackName: !Ref NetworkStackName
+
+  S3BucketsStack:
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/cencosud-cloudformation-templates/t20-s3-buckets-v0.1.yaml
+      Parameters:
+          RAWDATABUCKETNAME: !Ref RAWDATABUCKETNAME
+          DATALAKEBUCKETNAME: !Ref DATALAKEBUCKETNAME
+          LOADDATABUCKETNAME: !Ref LOADDATABUCKETNAME
+          RawDataBucketLifecycleEnabled: !Ref RawDataBucketLifecycleEnabled
+          RawDataBucketLifecycleDaysToGlacier: !Ref RawDataBucketLifecycleDaysToGlacier
+          LoadDataBucketLifecycleDaysToDelete: !Ref LoadDataBucketLifecycleDaysToDelete
+          LoadDataBucketLifecycleEnabled: !Ref LoadDataBucketLifecycleEnabled
+          commonScriptsBucket: !Ref commonScriptsBucket
+
+  GlueScripts:
+    DependsOn: S3BucketsStack    
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/cencosud-cloudformation-templates/t90-glue-scripts-v0.1.yaml
+      Parameters:
+          rawDataBucketName: !Ref  RAWDATABUCKETNAME
+          dataLakeBucketName: !Ref DATALAKEBUCKETNAME 
+          loadDataBucketName: !Ref LOADDATABUCKETNAME  
+          glueScriptsBucket: !Ref commonScriptsBucket 
+
+  redshiftCluster:
+    DependsOn: MainVPCStack 
+    Condition: createRedshiftResources
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/cencosud-cloudformation-templates/t50-redshift-cluster-v0.2.yaml
+      Parameters:
+          DatabaseName: !Ref RedshiftDatabaseName
+          ClusterType: !Ref RedshiftClusterType
+          NumberOfNodes: !Ref RedshiftNumberOfNodes
+          NodeType: !Ref RedshiftNodeType
+          MasterUsername: !Ref RedshiftDatabaseUsername
+          MasterUserPassword: !Ref RedshiftDatabasePassword
+          SubnetId:
+            Fn::ImportValue:
+             !Sub "${NetworkStackName}-PRIVATE3AZ1"
+          SecurityGroup: !GetAtt 
+                 - MainVPCStack
+                 - Outputs.RedshiftSecgroup
+          rawDataBucketName: !Ref  RAWDATABUCKETNAME
+          dataLakeBucketName: !Ref DATALAKEBUCKETNAME 
+          snapShotId: !GetAtt clusterSnapshot.snapShotId
+
+  SQLExecutor:
+    DependsOn: MainVPCStack
+    Condition: createRedshiftResources
+    Type: 'AWS::CloudFormation::Stack'
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/cencosud-cloudformation-templates/t100-query-server-v0.1.yaml
+      Parameters:
+        EC2VPC:
+          Fn::ImportValue:
+           !Sub "${NetworkStackName}-VPCID"
+        privateAZ1:
+          Fn::ImportValue:
+            !Sub "${NetworkStackName}-PRIVATE3AZ1"
+        privateAZ2:  
+          Fn::ImportValue:
+            !Sub "${NetworkStackName}-PRIVATE3AZ2"
+        queryKeyPair: !Ref queryKeyPair
+        SecurityGroup: !GetAtt 
+                 - MainVPCStack
+                 - Outputs.SqlExecutorSecGroup
+        commonScriptsBucket: !Ref commonScriptsBucket
+        Clusterpgpass: !GetAtt 
+                 - redshiftCluster
+                 - Outputs.Clusterpgpass 
+        RedshiftDatabasePassword: !Ref RedshiftDatabasePassword
+        spectrumRole: !GetAtt 
+                 - redshiftCluster
+                 - Outputs.spectrumRole 
+
+  clusterSnapshot:
+    Type: Custom::copyGlueJob
+    Properties:
+      ServiceToken: !GetAtt clusterSnapshotFinder.Arn
+      updatecontrolvalue: !Ref createCluster
+      stackname: !Ref AWS::StackName
+
+  clusterSnapshotFinder:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt 'clusterSnapshotFinderRole.Arn'
+      Runtime: "python2.7"
+      Timeout: 30
+      Handler: "index.handler"
+      Code: 
+        ZipFile: |
+         import cfnresponse
+         import boto3
+         from datetime import datetime
+         client = boto3.client('redshift')
+         def handler(event, context):
+            responseData = {}
+            try:
+              templatename = event['ResourceProperties']['stackname']
+              if event['RequestType'] != 'Delete':
+                response = client.describe_cluster_snapshots(SnapshotType='manual')
+                filteredsnaps = list(filter(lambda x: x['SnapshotIdentifier'].startswith(templatename) , response['Snapshots']))
+                snapname = "nosnap"
+                createdate =  datetime.min
+                for v in filteredsnaps:
+                    if v['SnapshotCreateTime'].replace(tzinfo=None) > createdate:
+                       snapname = v['SnapshotIdentifier']
+                       createdate = v['SnapshotCreateTime'].replace(tzinfo=None)
+                responseData['snapShotId'] = snapname
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, "CustomResourcePhysicalID")                        
+            except Exception as e:
+                print(e)
+                cfnresponse.send(event, context, cfnresponse.FAILED, responseData, "CustomResourcePhysicalID")
+
+  clusterSnapshotFinderRole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: redshiftreadSnaps
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - "redshift:DescribeClusterSnapshots"
+              Resource: 
+              - "*"
+              Effect: Allow

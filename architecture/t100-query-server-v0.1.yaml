@@ -1,0 +1,276 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "Server Config"
+        Parameters:
+          - EC2VPC
+          - privateAZ1
+          - privateAZ2
+    ParameterLabels:
+      EC2VPC:
+        default: "VPC for SQL Executor"
+
+      privateAZ1:
+        default: "Private AZ1 Id"
+
+      privateAZ2:       
+        default: "Private AZ2 Id"
+
+      SecurityGroup:
+        default: "query executor Security group id"
+
+      commonScriptsBucket:
+        default: "Bucket where the scripts are located"
+
+
+Parameters:
+  EC2VPC:
+    Description: SQL Executor Security Group
+    Type: String
+  
+  privateAZ1:
+    Description: >-
+        Select (1) subnet to associate with the EC2 instance. Make sure to choose
+        the subnet within the same VPC chosen above.
+    Type: String
+
+  privateAZ2:
+    Description: >-
+        Select (1) subnet to associate with the EC2 instance. Make sure to choose
+        the subnet within the same VPC chosen above.
+    Type: String
+
+  queryKeyPair:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Key pair to use for query executor
+
+  SecurityGroup:
+    Description: query executor Security group
+    Type: String
+
+  commonScriptsBucket:
+    Type: String
+    Description: Bucket where the scripts are located    
+
+  Clusterpgpass:
+    Type: String
+    Description: Cluster info
+
+  RedshiftDatabasePassword:     
+    AllowedPattern: >-
+      ^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$
+    ConstraintDescription: >-
+      Must contain alphanumeric characters, uppercase letters, lowercase
+      letters, at least one number and at least one special character
+    Description: The database admin account password.
+    MaxLength: '41'
+    MinLength: '8'
+    NoEcho: 'true'
+    Type: String
+
+  spectrumRole:
+    Type: String
+    Description: arn of role for redshift spectrum
+
+Mappings: 
+    AmazonLinux: 
+        us-east-1: 
+            AMIID: "ami-1853ac65"   #Virginia
+        us-east-2:
+            AMIID: "ami-25615740"   #Ohio
+        us-west-1: 
+            AMIID: "ami-bf5540df"   #California
+        us-west-2:
+            AMIID: "ami-d874e0a0"   #Oregon
+        ca-central-1:
+            AMIID: "ami-5b55d23f"   #Canada
+        eu-central-1:
+            AMIID: "ami-ac442ac3"   #Frankfurt
+        eu-west-1:
+            AMIID: "ami-3bfab942"   #Ireland
+        eu-west-2:
+            AMIID: "ami-dff017b8"   #London      
+        eu-west-3:
+            AMIID: "ami-4f55e332"   #Paris  
+        ap-northeast-1:
+            AMIID: "ami-a77c30c1"   #Tokyo         
+        ap-northeast-2:
+            AMIID: "ami-5e1ab730"   #Seoul           
+        ap-southeast-1: 
+            AMIID: "ami-e2adf99e"   #Singapore
+        ap-southeast-2:
+            AMIID: "ami-43874721"   #Sydney 
+        ap-south-1: 
+            AMIID: "ami-7c87d913"   #Mumbai
+        sa-east-1:
+            AMIID: "ami-5339733f"   #Sao Paulo
+
+Resources:
+  sqlexecutorlaunch:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    DependsOn: loadsampledata
+    Properties:
+      AssociatePublicIpAddress: true
+      ImageId: 
+        Fn::FindInMap: ['AmazonLinux', !Ref "AWS::Region", 'AMIID']
+      SecurityGroups:
+      - !Ref SecurityGroup
+      InstanceType: m4.large
+      IamInstanceProfile: 
+        Ref: "instanceprofile"
+      KeyName: !Ref queryKeyPair
+      UserData: 
+        Fn::Base64: !Sub 
+          - |
+            #!/bin/bash
+            yum update -y
+            yum install -y gcc python-setuptools python-devel postgresql-devel
+            easy_install psycopg2
+            easy_install boto3
+            export AWS_DEFAULT_REGION=${AWS::Region}
+            echo ${Clusterpgpass}:${RedshiftDatabasePassword}> ~/.pgpass
+            chmod 0600 ~/.pgpass
+            export PGDATABASE=${var1}
+            export PGHOST=${var2}
+            export PGPORT=${var3}
+            export PGUSER=${var4}
+            yum install -y awslogs
+            yum install -y  ksh
+            mkdir /scripts
+            aws s3 cp s3://${commonScriptsBucket}/ec2scripts/ /scripts/ --recursive
+            cp ~/.pgpass /home/ec2-user/.pgpass
+            chown ec2-user /home/ec2-user/.pgpass
+            psql -c 'select version();' > /home/ec2-user/queryout.txt
+          - {var1: !Select [2, !Split [":", !Ref Clusterpgpass]],var2: !Select [0, !Split [":", !Ref Clusterpgpass]],var3: !Select [1, !Split [":", !Ref Clusterpgpass]],var4: !Select [3, !Split [":", !Ref Clusterpgpass]]}
+
+  autoscalinggroupsqlexec:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier: 
+      - !Ref privateAZ1
+      - !Ref privateAZ2
+      LaunchConfigurationName:
+        Ref: sqlexecutorlaunch
+      MinSize: '1'
+      MaxSize: '1'
+      Tags:
+      - Key: "Name"
+        Value: "sqlexecutor"
+        PropagateAtLaunch: true
+
+  instanceprofile:
+    Type: "AWS::IAM::InstanceProfile"
+    Properties: 
+      Roles: [!Ref instanceRole]
+
+  copyzipfile:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt 'copyfunctionrole.Arn'
+      Runtime: "python2.7"
+      Timeout: 300
+      Handler: "index.handler"
+      Code: 
+        ZipFile: |
+         import cfnresponse
+         import boto3
+         from botocore.client import Config
+         import zipfile
+         import os
+         def handler(event, context):
+            client = boto3.client('s3')
+            destinationbucket = event['ResourceProperties']['destinationBucketName']
+            destinationfolder = event['ResourceProperties']['destinationFolder']
+            sourceBucket = event['ResourceProperties']['sourceBucketName']
+            objectKey = event['ResourceProperties']['objectKey']
+            try:
+              if event['RequestType'] != 'Delete':
+                 s3 = boto3.client('s3', config=Config(signature_version='s3v4'))
+                 s3.download_file(sourceBucket, objectKey, '/tmp/result.zip')
+                 zfile = zipfile.ZipFile('/tmp/result.zip', 'r')
+                 zfile.extractall('/tmp/')
+                 zfile.close()
+                 os.remove('/tmp/result.zip')
+                 for filename in os.listdir("/tmp/"):
+                   s3.upload_file('/tmp/'+filename, destinationbucket, destinationfolder+filename)
+            except Exception as e:
+               print(e)
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, "CustomResourcePhysicalID")                        
+
+  loadsampledata:
+    Type: Custom::loadsampledata
+    Properties:
+      ServiceToken: !GetAtt copyzipfile.Arn
+      destinationBucketName: !Ref 'commonScriptsBucket'
+      sourceBucketName: 'lfcarocomdemo'
+      objectKey: 'cencogluescripts/scripts.zip'
+      destinationFolder: 'ec2scripts/'
+
+  copyfunctionrole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: s3allsinglebucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - s3:*
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::", !Ref commonScriptsBucket , "/*" ] ]
+              - !Join [ "", [ "arn:aws:s3:::",!Ref commonScriptsBucket ] ]              
+              Effect: Allow      
+
+  instanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+      - PolicyName: s3readaccesss
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Action:
+              - s3:GetObject
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::", !Ref commonScriptsBucket , "/*" ] ]
+              Effect: Allow
+            - Action:
+              - s3:ListBucket
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::",!Ref commonScriptsBucket ] ]
+              Effect: Allow      
+      - PolicyName: cloudwatchlogsaccess
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            - logs:DescribeLogStreams
+            Resource: 'arn:aws:logs:*:*:*'
+            Effect: Allow

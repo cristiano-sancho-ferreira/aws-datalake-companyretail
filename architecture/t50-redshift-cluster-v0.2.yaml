@@ -1,0 +1,186 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  DatabaseName:
+    Description: The name of the first database to be created when the cluster is
+      created
+    Type: String
+    Default: dev
+    AllowedPattern: "([a-z]|[0-9])+"
+  ClusterType:
+    Description: The type of cluster
+    Type: String
+    Default: single-node
+    AllowedValues:
+    - single-node
+    - multi-node
+  NumberOfNodes:
+    Description: The number of compute nodes in the cluster. For multi-node clusters,
+      the NumberOfNodes parameter must be greater than 1
+    Type: Number
+    Default: '1'
+  NodeType:
+    Description: The type of node to be provisioned
+    Type: String
+    Default: dc1.large
+    AllowedValues:
+      - dc1.large
+      - dc1.8xlarge
+      - dc2.large
+      - dc2.8xlarge      
+      - ds2.xlarge
+      - ds2.8xlarge
+      - ds1.xlarge
+      - ds1.8xlarge
+  MasterUsername:
+    Description: The user name that is associated with the master user account for
+      the cluster that is being created
+    Type: String
+    Default: defaultuser
+    AllowedPattern: "([a-z])([a-z]|[0-9])*"
+  MasterUserPassword:
+    Description: The password that is associated with the master user account for
+      the cluster that is being created.
+    Type: String
+    NoEcho: 'true'
+  SubnetId:
+    Description: Redshift cluster subnet
+    Type: String
+  SecurityGroup:
+    Description: Redshift cluster Security group
+    Type: String
+  dataLakeBucketName:
+    Description: Data Lake Bucket
+    Type: String
+  rawDataBucketName:
+    Description: Raw Data Bucket
+    Type: String
+  snapShotId:
+    Description: Snapshot id to use
+    Type: String
+
+
+Conditions:
+  IsMultiNodeCluster:
+    Fn::Equals:
+    - Ref: ClusterType
+    - multi-node
+
+  emptySnapshot:
+    Fn::Equals:
+    - Ref: snapShotId
+    - nosnap
+
+
+
+
+Resources:
+  RedshiftCluster:
+    Type: AWS::Redshift::Cluster
+    DeletionPolicy: Snapshot
+    Properties:
+      ClusterType:
+        Ref: ClusterType
+      IamRoles: 
+        - !GetAtt 'spectrumRole.Arn'
+      PubliclyAccessible: false  
+      SnapshotIdentifier:
+        Fn::If:
+        - emptySnapshot
+        - Ref: AWS::NoValue
+        - Ref: snapShotId
+      NumberOfNodes:
+        Fn::If:
+        - IsMultiNodeCluster
+        - Ref: NumberOfNodes
+        - Ref: AWS::NoValue
+      NodeType:
+        Ref: NodeType
+      DBName:
+        Ref: DatabaseName
+      MasterUsername:
+        Ref: MasterUsername
+      MasterUserPassword:
+        Ref: MasterUserPassword
+      ClusterParameterGroupName:
+        Ref: RedshiftClusterParameterGroup
+      VpcSecurityGroupIds:
+      - Ref: SecurityGroup
+      ClusterSubnetGroupName:
+        Ref: RedshiftClusterSubnetGroup
+
+  RedshiftClusterParameterGroup:
+    Type: AWS::Redshift::ClusterParameterGroup
+    Properties:
+      Description: Cluster parameter group
+      ParameterGroupFamily: redshift-1.0
+      Parameters:
+      - ParameterName: enable_user_activity_logging
+        ParameterValue: 'true'
+  RedshiftClusterSubnetGroup:
+    Type: AWS::Redshift::ClusterSubnetGroup
+    Properties:
+      Description: Cluster subnet group
+      SubnetIds:
+      - Ref: SubnetId
+
+  spectrumRole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - redshift.amazonaws.com          
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: s3readbuckets
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - s3:GetObject
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::", !Ref dataLakeBucketName , "/*" ] ]
+              - !Join [ "", [ "arn:aws:s3:::", !Ref rawDataBucketName , "/*" ] ]
+              Effect: Allow
+            - Action:
+              - s3:ListBucket
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::",!Ref dataLakeBucketName ] ]
+              - !Join [ "", [ "arn:aws:s3:::", !Ref rawDataBucketName ] ]
+              Effect: Allow      
+
+Outputs:
+  ClusterEndpoint:
+    Description: Cluster endpoint
+    Value: !Sub "${RedshiftCluster.Endpoint.Address}:${RedshiftCluster.Endpoint.Port}"
+  Clusterpgpass:
+    Description: Cluster endpoint
+    Value: !Sub "${RedshiftCluster.Endpoint.Address}:${RedshiftCluster.Endpoint.Port}:${DatabaseName}:${MasterUsername}"    
+  MasterUsername:
+    Description: Cluster master username
+    Value: !Ref MasterUsername
+  ClusterName:
+    Description: Name of cluster
+    Value:
+      Ref: RedshiftCluster
+  ParameterGroupName:
+    Description: Name of parameter group
+    Value:
+      Ref: RedshiftClusterParameterGroup
+  RedshiftClusterSubnetGroupName:
+    Description: Name of cluster subnet group
+    Value:
+      Ref: RedshiftClusterSubnetGroup
+  spectrumRole:
+    Description: arn of role for redshift spectrum
+    Value: !GetAtt 'spectrumRole.Arn'
+
+

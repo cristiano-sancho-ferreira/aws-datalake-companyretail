@@ -1,0 +1,264 @@
+ 
+Parameters:
+  VPCCIDR:
+    #AllowedPattern: >-
+    #  ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.200.0.0/16
+    Description: CIDR block for the VPC
+    Type: String
+    
+  PUBLICAZ1:
+    #AllowedPattern: >-
+    #  ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.200.11.0/24
+    Description: Public Subnet CIDR for Load Balancer in AZ1
+    Type: String
+  PUBLICAZ2:
+    #AllowedPattern: >-
+    #  ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.200.12.0/24
+    Description: Public Subnet CIDR for Load Balancer in AZ2
+    Type: String	
+  PRIVATE1AZ1:
+    #AllowedPattern: >-
+    #  ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.200.21.0/24
+    Description: Private Subnet CIDR for F5 in AZ1
+    Type: String
+  PRIVATE1AZ2:
+    #AllowedPattern: >-
+    #  ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 10.200.22.0/24
+    Description: Private Subnet CIDR for F5 in AZ2
+    Type: String
+  VPGWtagkey:
+    Default: transitvpc:spoke
+    Description: Private Gateway tag key
+    Type: String
+  VPGWtagvalue:
+    Default: "true"
+    Description: Private Gateway tag value
+    Type: String
+
+  PREMCIDR:
+    #AllowedPattern: >-
+    #  ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    Default: 192.168.0.0/24
+    Description: CIDR block for the on premises network connected through the transitvpc
+    Type: String
+
+
+Resources:  
+  VPC:
+   Type: "AWS::EC2::VPC"
+   Properties:
+     CidrBlock: !Ref VPCCIDR
+     EnableDnsSupport: true
+     EnableDnsHostnames: true      
+  
+  IGW:
+   Type: "AWS::EC2::InternetGateway"
+  
+  IGWGatewayAttach:
+   Type: "AWS::EC2::VPCGatewayAttachment"
+   Properties:
+     InternetGatewayId: !Ref IGW
+     VpcId: !Ref VPC
+
+  SubnetPublicAZ1:
+   Type: "AWS::EC2::Subnet"
+   Properties:
+     AvailabilityZone: !Select [0, !GetAZs ]
+     CidrBlock: !Ref PUBLICAZ1
+     MapPublicIpOnLaunch: true
+     VpcId: !Ref VPC
+     Tags:
+     - Key: Name
+       Value: SubnetPublicAZ1
+  
+  SubnetPublicAZ2:
+   Type: "AWS::EC2::Subnet"
+   Properties:
+     AvailabilityZone: !Select [1, !GetAZs ]
+     CidrBlock: !Ref PUBLICAZ2
+     MapPublicIpOnLaunch: true
+     VpcId: !Ref VPC
+     Tags:
+     - Key: Name
+       Value: SubnetPublicAZ2
+  
+  SubnetPrivate1AZ1:
+   Type: "AWS::EC2::Subnet"
+   Properties:
+     AvailabilityZone: !Select [0, !GetAZs ]
+     CidrBlock: !Ref PRIVATE1AZ1
+     MapPublicIpOnLaunch: false
+     VpcId: !Ref VPC
+     Tags:
+     - Key: Name
+       Value: SubnetPrivate1AZ1
+  
+  SubnetPrivate1AZ2:
+   Type: "AWS::EC2::Subnet"
+   Properties:
+     AvailabilityZone: !Select [1, !GetAZs ]
+     CidrBlock: !Ref PRIVATE1AZ2
+     MapPublicIpOnLaunch: false
+     VpcId: !Ref VPC
+     Tags:
+     - Key: Name
+       Value: SubnetPrivate1AZ2
+
+  RouteDefaultPublic:
+   Type: "AWS::EC2::Route"
+   DependsOn: IGWGatewayAttach
+   Properties:
+     DestinationCidrBlock: 0.0.0.0/0
+     GatewayId: !Ref IGW
+     RouteTableId: !Ref RouteTablePublic
+  
+  RouteTablePublic:
+   Type: "AWS::EC2::RouteTable"
+   Properties:
+     VpcId: !Ref VPC
+  
+  RouteNATGWPrivate:
+   Type: "AWS::EC2::Route"
+   DependsOn: NatGatewayPrivate
+   Properties:
+     DestinationCidrBlock: 0.0.0.0/0     
+     NatGatewayId: !Ref NatGatewayPrivate
+     RouteTableId: !Ref RouteTablePrivate
+ 
+  RouteVPGWPrivate:
+   Type: "AWS::EC2::Route"
+   DependsOn: VPGWGatewayAttach
+   Properties:
+     DestinationCidrBlock: !Ref PREMCIDR     
+     GatewayId: !Ref VPGW
+     RouteTableId: !Ref RouteTablePrivate
+
+  RouteTablePrivate:
+   Type: "AWS::EC2::RouteTable"
+   Properties:
+     VpcId: !Ref VPC
+  
+  SubnetRouteTableAssociatePublicAZ1:
+   Type: "AWS::EC2::SubnetRouteTableAssociation"
+   Properties:
+     RouteTableId: !Ref RouteTablePublic
+     SubnetId: !Ref SubnetPublicAZ1
+
+  SubnetRouteTableAssociatePublicAZ2:
+   Type: "AWS::EC2::SubnetRouteTableAssociation"
+   Properties:
+     RouteTableId: !Ref RouteTablePublic
+     SubnetId: !Ref SubnetPublicAZ2
+
+  SubnetRouteTableAssociatePrivate1AZ1:
+   Type: "AWS::EC2::SubnetRouteTableAssociation"
+   Properties:
+     RouteTableId: !Ref RouteTablePrivate
+     SubnetId: !Ref SubnetPrivate1AZ1
+
+  SubnetRouteTableAssociatePrivate1AZ2:
+   Type: "AWS::EC2::SubnetRouteTableAssociation"
+   Properties:
+     RouteTableId: !Ref RouteTablePrivate
+     SubnetId: !Ref SubnetPrivate1AZ2
+
+  NatGatewayElasticIp:    
+   Type: "AWS::EC2::EIP"
+   Properties:
+     Domain: vpc
+
+  NatGatewayPrivate:
+   Type: "AWS::EC2::NatGateway"
+   Properties: 
+     AllocationId: !GetAtt NatGatewayElasticIp.AllocationId
+     SubnetId: !Ref SubnetPublicAZ1
+
+  S3Endpoint:
+   Type: 'AWS::EC2::VPCEndpoint'
+   Properties:
+     PolicyDocument:
+       Version: 2012-10-17
+       Statement:
+         - Effect: Allow
+           Principal: '*'
+           Action:
+             - 's3:*'
+           Resource:
+             - 'arn:aws:s3:::*'
+     RouteTableIds:
+       - !Ref RouteTablePrivate
+     ServiceName: !Join 
+       - ''
+       - - com.amazonaws.
+         - !Ref 'AWS::Region'
+         - .s3
+     VpcId: !Ref VPC
+
+  VPGW:
+    Type: "AWS::EC2::VPNGateway"
+    Properties: 
+      Type: ipsec.1
+      Tags: 
+        - 
+          Key: !Ref VPGWtagkey
+          Value: !Ref VPGWtagvalue
+
+  VPGWGatewayAttach:
+   Type: "AWS::EC2::VPCGatewayAttachment"
+   Properties:
+     VpnGatewayId: !Ref VPGW
+     VpcId: !Ref VPC
+
+Outputs:
+  VPC:
+   Description: VPC ID
+   Value: !Ref VPC
+   Export:
+     Name: !Sub '${AWS::StackName}-VPCID'
+
+  VPCCIDR:
+   Description: VPC CIDR range
+   Value: !Ref VPCCIDR
+   Export:
+     Name: !Sub '${AWS::StackName}-VPCCIDR'
+
+  PublicSubnets:
+   Description: Internet facing Subnets
+   Value: !Join [ ",", [!Ref SubnetPublicAZ1,!Ref SubnetPublicAZ2] ]
+   Export:
+     Name: !Sub '${AWS::StackName}-PublicSubnets'
+
+  PublicApplicationAZ1:
+   Description: Public Application Subnets AZ1
+   Value: !Ref SubnetPublicAZ1
+   Export:
+     Name: !Sub '${AWS::StackName}-SubnetPublicAZ1'
+  
+  PublicApplicationAZ2:  
+   Description: Public Application Subnets AZ2
+   Value: !Ref SubnetPublicAZ2
+   Export:
+     Name: !Sub '${AWS::StackName}-SubnetPublicAZ2'
+
+  PrivateApplicationAZ1:
+   Description: Private Application Subnets AZ1
+   Value: !Ref SubnetPrivate1AZ1
+   Export:
+     Name: !Sub '${AWS::StackName}-PRIVATE3AZ1'
+  
+  PrivateApplicationAZ2:  
+   Description: Private Application Subnets AZ2
+   Value: !Ref SubnetPrivate1AZ2
+   Export:
+     Name: !Sub '${AWS::StackName}-PRIVATE3AZ2'

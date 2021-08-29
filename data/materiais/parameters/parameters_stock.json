@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_stock","TableDataLake":"stock_stock","TableFlatFile":"stock_stock_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_stock, estado_de_stock, centro_cd"}
+{"InterfaceGroup":"datalake_stock","TableDataLake":"stock_sobrestock","TableFlatFile":"stock_sobrestock_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_act, centro_cd"}		

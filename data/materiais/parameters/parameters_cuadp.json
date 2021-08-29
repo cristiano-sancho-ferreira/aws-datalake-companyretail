@@ -1,0 +1,4 @@
+{"InterfaceGroup":"datalake_cuadp","TableDataLake":"cuadratura","TableFlatFile":"cuadratura_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}
+{"InterfaceGroup":"datalake_cuadp","TableDataLake":"cuadp_pos_gnx","TableFlatFile":"cuadp_pos_gnx_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"calendar_dt, Primary_Dim_Level_2_id"}		
+{"InterfaceGroup":"datalake_cuadp","TableDataLake":"cuadp_pos_jan","TableFlatFile":"cuadp_pos_jan_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"calendar_dt, Primary_Dim_Level_2_id"}		
+{"InterfaceGroup":"datalake_cuadp","TableDataLake":"cuadp_pos_pos","TableFlatFile":"cuadp_pos_pos_flatfile","Source":"pos","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"calendar_dt"}

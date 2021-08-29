@@ -1,0 +1,3 @@
+{"InterfaceGroup":"datalake_obs","TableDataLake":"obs_enc","TableFlatFile":"obs_enc_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_obsolescencia, accion, centro_cd"}		
+{"InterfaceGroup":"datalake_obs","TableDataLake":"obs_det","TableFlatFile":"obs_det_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_obsolescencia, accion, centro_cd"}		
+{"InterfaceGroup":"datalake_obs","TableDataLake":"obs_param","TableFlatFile":"obs_param_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

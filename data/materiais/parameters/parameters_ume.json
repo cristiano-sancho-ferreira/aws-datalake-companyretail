@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_ume","TableDataLake":"ume_dume","TableFlatFile":"ume_dume_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_ume","TableDataLake":"ume_ume","TableFlatFile":"ume_ume_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_acu","TableDataLake":"acu_acu","TableFlatFile":"acu_acu_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_creacion, centro_cd"}		
+{"InterfaceGroup":"datalake_acu","TableDataLake":"acu_clase","TableFlatFile":"acu_clase_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

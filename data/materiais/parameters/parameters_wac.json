@@ -1,0 +1,6 @@
+{"InterfaceGroup":"datalake_wac","TableDataLake":"pos_dincom","TableFlatFile":"pos_dincom_flatfile","Source":"pos","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_wac","TableDataLake":"wac_accicome","TableFlatFile":"wac_accicome_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_wac","TableDataLake":"wac_agrupa","TableFlatFile":"wac_agrupa_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_wac","TableDataLake":"wac_detaccom","TableFlatFile":"wac_detaccom_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_wac","TableDataLake":"wac_canastas","TableFlatFile":"wac_canastas_flatfile","Source":"gnx","Mode":"append","IsPartition":"y","PartitionColumn":"fecha_procesamiento"}
+{"InterfaceGroup":"datalake_wac","TableDataLake":"wac_ofercomp","TableFlatFile":"wac_ofercomp_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

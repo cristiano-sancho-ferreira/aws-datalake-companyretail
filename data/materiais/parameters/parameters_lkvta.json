@@ -1,0 +1,5 @@
+{"InterfaceGroup":"datalake_lkvta","TableDataLake":"lkvta_pos_register","TableFlatFile":"lkvta_pos_register_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}
+{"InterfaceGroup":"datalake_lkvta","TableDataLake":"lkvta_currency","TableFlatFile":"lkvta_currency_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_lkvta","TableDataLake":"lkvta_bin_group","TableFlatFile":"lkvta_bin_group_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_lkvta","TableDataLake":"lkvta_bin_bin","TableFlatFile":"lkvta_bin_bin_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_lkvta","TableDataLake":"lkvta_pay_type","TableFlatFile":"lkvta_pay_type_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

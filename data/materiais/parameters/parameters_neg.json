@@ -1,0 +1,5 @@
+{"InterfaceGroup":"datalake_neg","TableDataLake":"neg_arti","TableFlatFile":"neg_arti_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_final_liquidacion, centro_cd"}	
+{"InterfaceGroup":"datalake_neg","TableDataLake":"neg_prov","TableFlatFile":"neg_prov_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_final_liquidacion, centro_cd"}	
+{"InterfaceGroup":"datalake_neg","TableDataLake":"neg_margen","TableFlatFile":"neg_margen_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"ano_mes"}	
+{"InterfaceGroup":"datalake_neg","TableDataLake":"neg_param","TableFlatFile":"neg_param_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"mes"}	
+{"InterfaceGroup":"datalake_neg","TableDataLake":"neg_aterrizaje","TableFlatFile":"neg_aterrizaje_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"reporting_month_id"}

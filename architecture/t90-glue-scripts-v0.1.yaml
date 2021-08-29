@@ -1,0 +1,258 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      -
+        Label:
+          default: "S3 Buckets"
+        Parameters:
+          - rawDataBucketName
+          - dataLakeBucketName
+          - loadDataBucketName
+          - glueScriptsBucket      
+    ParameterLabels:      
+      rawDataBucketName:
+        default: "Raw data bucket name"
+      dataLakeBucketName:
+        default: "Datalake bucket name"
+      loadDataBucketName  :
+        default: "Load data bucket name"
+      glueScriptsBucket:
+        default: "Bucket where the scripts are located" 
+
+Parameters:      
+  rawDataBucketName:
+    Type: String
+    Description: S3 Bucket for raw data
+  dataLakeBucketName:
+    Type: String
+    Default: cencosud-datalake-12345678901234567890
+    Description: S3 Bucket for data lake
+  loadDataBucketName:  
+    Type: String
+    Default: cencosud-loaddata-12345678901234567890
+    Description: S3 Bucket for load data
+  glueScriptsBucket:
+    Type: String
+    Description: Bucket where the scripts are located
+  
+Resources:
+  rawcrawlerole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - glue.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: s3allsinglebucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - s3:GetObject
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::", !Ref rawDataBucketName , "/*" ] ]
+              Effect: Allow
+            - Action:
+              - s3:ListBucket
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::",!Ref rawDataBucketName ] ]
+              Effect: Allow
+        - PolicyName: cloudwatchlogswrite
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource: "*"
+              Effect: Allow              
+
+  datalakecrawlerole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - glue.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: s3allsinglebucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - s3:GetObject
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::", !Ref dataLakeBucketName , "/*" ] ]
+              Effect: Allow
+            - Action:
+              - s3:ListBucket
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::",!Ref dataLakeBucketName ] ]
+              Effect: Allow
+        - PolicyName: cloudwatchlogswrite
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource: "*"
+              Effect: Allow              
+
+  gluejobrole:
+    Type: "AWS::IAM::Role"
+    Properties: 
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+        - arn:aws:iam::aws:policy/AmazonAthenaFullAccess
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - glue.amazonaws.com
+            - lambda.amazonaws.com            
+          Action:
+          - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: s3allsinglebucket
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - s3:*
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::", !Ref dataLakeBucketName , "/*" ] ]
+              - !Join [ "", [ "arn:aws:s3:::",!Ref dataLakeBucketName ] ]
+              - !Join [ "", [ "arn:aws:s3:::", !Ref glueScriptsBucket , "/*" ] ]
+              - !Join [ "", [ "arn:aws:s3:::", !Ref glueScriptsBucket ] ]          
+              Effect: Allow
+        - PolicyName: s3readbuckets
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - s3:GetObject
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::", !Ref dataLakeBucketName , "/*" ] ]
+              - !Join [ "", [ "arn:aws:s3:::", !Ref rawDataBucketName , "/*" ] ]
+              - !Join [ "", [ "arn:aws:s3:::", !Ref glueScriptsBucket , "/*" ] ]
+              - !Join [ "", [ "arn:aws:s3:::", 'lfcarocomdemo' , "/*" ] ]                            
+              Effect: Allow
+            - Action:
+              - s3:ListBucket
+              Resource: 
+              - !Join [ "", [ "arn:aws:s3:::",!Ref dataLakeBucketName ] ]
+              - !Join [ "", [ "arn:aws:s3:::", !Ref rawDataBucketName ] ]
+              - !Join [ "", [ "arn:aws:s3:::", !Ref glueScriptsBucket ] ]
+              - !Join [ "", [ "arn:aws:s3:::", 'lfcarocomdemo' ] ]
+              Effect: Allow
+        - PolicyName: cloudwatchlogswrite
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+              Resource: "*"
+              Effect: Allow              
+
+  CopyLambdasFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Role: !GetAtt 'gluejobrole.Arn'
+      Runtime: "python2.7"
+      Timeout: 30
+      Handler: "index.handler"
+      Code: 
+        ZipFile: |
+         import cfnresponse
+         import boto3
+         from botocore.client import Config
+         import zipfile
+         def handler(event, context):
+            try:
+              client = boto3.client('s3')
+              destinationbucket = event['ResourceProperties']['destinationBucketName']
+              sourceBucket = event['ResourceProperties']['sourceBucketName']
+              objectKey = event['ResourceProperties']['objectKey']
+              if event['RequestType'] != 'Delete':
+                 s3 = boto3.client('s3')
+                 s3.copy({ 'Bucket': sourceBucket, 'Key': objectKey}, destinationbucket, objectKey)
+              cfnresponse.send(event, context, cfnresponse.SUCCESS, {}, "CustomResourcePhysicalID")                        
+            except Exception as e:
+                print(e)
+                cfnresponse.send(event, context, cfnresponse.FAILED, {}, "CustomResourcePhysicalID")
+
+  rawcrawler:
+    Type: "AWS::Glue::Crawler"
+    Properties:
+      Role: !GetAtt rawcrawlerole.Arn
+      DatabaseName: !Join [ "_", [ "raw" , !Ref "AWS::StackName"  ] ]
+      Targets: 
+        S3Targets:
+         - Path: !Join [ "/", [ "s3:/",!Ref rawDataBucketName ] ]
+
+  datalakecrawler:
+    Type: "AWS::Glue::Crawler"
+    Properties:
+      Role: !GetAtt datalakecrawlerole.Arn
+      DatabaseName: !Join [ "_", [ "datalake" , !Ref "AWS::StackName"  ] ]
+      Targets: 
+        S3Targets:
+         - Path: !Join [ "/", [ "s3:/",!Ref dataLakeBucketName ] ]
+
+  copyGlueJob:
+    Type: Custom::copyGlueJob
+    Properties:
+      ServiceToken: !GetAtt CopyLambdasFunction.Arn
+      destinationBucketName: !Ref glueScriptsBucket
+      sourceBucketName: 'lfcarocomdemo'
+      objectKey: 'cencogluescripts/parquetconversion.py'
+      
+
+  etljob:
+    Type: "AWS::Glue::Job"
+    DependsOn: copyGlueJob    
+    Properties:
+      Role: !Ref gluejobrole
+      AllocatedCapacity: 2
+      DefaultArguments:
+        "--TempDir": !Join [ "/", [ "s3:/",!Ref glueScriptsBucket , tmp/ ] ]
+        "--sourcedatabase": !Join [ "_", [ "raw" , !Ref "AWS::StackName"  ] ]
+        "--destinationpath": !Join [ "/", [ "s3:/",!Ref dataLakeBucketName , '' ] ]
+        "--region": !Ref AWS::Region
+        "--job-bookmark-option": job-bookmark-enable
+        "--encryption-type": "sse-s3"
+      Command: 
+        Name: glueetl
+        ScriptLocation: !Join [ "/", [ "s3:/",!Ref glueScriptsBucket , cencogluescripts/parquetconversion.py ] ]
+
+
+
+ 
+

@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_impu","TableDataLake":"impu_impa","TableFlatFile":"impu_impa_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_impu","TableDataLake":"impu_impu","TableFlatFile":"impu_impu_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

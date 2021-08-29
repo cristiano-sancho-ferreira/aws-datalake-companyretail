@@ -1,0 +1,1 @@
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_enc","TableFlatFile":"vta_enc_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}

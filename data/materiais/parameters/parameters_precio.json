@@ -1,0 +1,1 @@
+{"InterfaceGroup":"datalake_precio","TableDataLake":"precio_precio","TableFlatFile":"precio_precio_flatfile","Source":"gnx","Mode":"append","IsPartition":"y","PartitionColumn":"fecha_inicio, centro_cd"}	

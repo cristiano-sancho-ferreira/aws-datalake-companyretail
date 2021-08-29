@@ -1,0 +1,5 @@
+{"InterfaceGroup":"datalake_centro","TableDataLake":"centro_centro","TableFlatFile":"centro_centro_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_centro","TableDataLake":"centro_centrosec","TableFlatFile":"centro_centrosec_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}
+{"InterfaceGroup":"datalake_centro","TableDataLake":"centro_city","TableFlatFile":"centro_city_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_centro","TableDataLake":"centro_country","TableFlatFile":"centro_country_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_centro","TableDataLake":"centro_county","TableFlatFile":"centro_county_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

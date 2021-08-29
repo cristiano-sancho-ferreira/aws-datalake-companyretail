@@ -1,0 +1,5 @@
+{"InterfaceGroup":"datalake_centro","TableDataLake":"niv_niv0","TableFlatFile":"niv_niv0_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_centro","TableDataLake":"niv_niv1","TableFlatFile":"niv_niv1_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_centro","TableDataLake":"niv_niv2","TableFlatFile":"niv_niv2_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_centro","TableDataLake":"niv_niv3","TableFlatFile":"niv_niv3_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_centro","TableDataLake":"niv_niv4","TableFlatFile":"niv_niv4_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

@@ -1,0 +1,1 @@
+{"InterfaceGroup":"datalake_gond","TableDataLake":"gond_gond","TableFlatFile":"gond_gond_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"centro_cd"}		

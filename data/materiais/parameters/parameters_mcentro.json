@@ -1,0 +1,2 @@
+{"InterfaceGroup":"datalake_mcentro","TableDataLake":"mcentro_features","TableFlatFile":"mcentro_features_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_mcentro","TableDataLake":"mcentro_manager","TableFlatFile":"mcentro_manager_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		

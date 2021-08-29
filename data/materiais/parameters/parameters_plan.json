@@ -1,0 +1,4 @@
+{"InterfaceGroup":"datalake_plan","TableDataLake":"plan_plan","TableFlatFile":"plan_plan_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"mes, id"}		
+{"InterfaceGroup":"datalake_plan","TableDataLake":"plan_ajuste","TableFlatFile":"plan_ajuste_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"Fecha, Id"}		
+{"InterfaceGroup":"datalake_plan","TableDataLake":"plan_metric","TableFlatFile":"plan_metric_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}
+{"InterfaceGroup":"datalake_plan","TableDataLake":"plan_vtainst","TableFlatFile":"plan_vtainst_flatfile","Source":"user","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"calendar_dt, id"}		

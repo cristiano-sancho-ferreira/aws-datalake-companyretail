@@ -1,0 +1,7 @@
+{"InterfaceGroup":"datalake_pricing","TableDataLake":"pricing_artigrup","TableFlatFile":"pricing_artigrup_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_pricing","TableDataLake":"pricing_compe","TableFlatFile":"pricing_compe_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_pricing","TableDataLake":"pricing_compeaso","TableFlatFile":"pricing_compeaso_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_pricing","TableDataLake":"pricing_pesquisa","TableFlatFile":"pricing_pesquisa_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_pesquisa, centro_cd"}
+{"InterfaceGroup":"datalake_pricing","TableDataLake":"pricing_artiaso","TableFlatFile":"pricing_artiaso_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"n","PartitionColumn":""}		
+{"InterfaceGroup":"datalake_pricing","TableDataLake":"pricing_chequeobj","TableFlatFile":"pricing_chequeobj_flatfile","Source":"gnx","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha"}
+{"InterfaceGroup":"datalake_pricing","TableDataLake":"nielsen_mercado","TableFlatFile":"nielsen_mercado_flatfile","Source":"nlsn","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"periodo"}		

@@ -1,0 +1,9 @@
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_clif","TableFlatFile":"vta_clif_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}	
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_cupones","TableFlatFile":"vta_cupones_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}	
+{"InterfaceGroup":"datalake_vta","TableDataLake":"pos_vta_cupones","TableFlatFile":"pos_vta_cupones_flatfile","Source":"pos","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha, centro_cd"}	
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_desc","TableFlatFile":"vta_desc_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}	
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_enc","TableFlatFile":"vta_enc_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}	
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_impdet","TableFlatFile":"vta_impdet_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}	
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_pag","TableFlatFile":"vta_pag_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}	
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_prod","TableFlatFile":"vta_prod_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}	
+{"InterfaceGroup":"datalake_vta","TableDataLake":"vta_reca","TableFlatFile":"vta_reca_flatfile","Source":"jan","Mode":"Overwrite","IsPartition":"y","PartitionColumn":"fecha_contable, centro_cd"}	
