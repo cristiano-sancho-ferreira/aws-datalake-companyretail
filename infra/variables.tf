@@ -39,3 +39,7 @@ variable "glue_database_raw" {
 variable "glue_database_analytics" {
   default = "csancho_datalake_dev_analytics"
 }
+
+variable "lambda_function_name" {
+  default = "csancho-datalake-dev-create-athena"
+}
