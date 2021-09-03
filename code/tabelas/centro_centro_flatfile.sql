@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE companystream_datalake_dev_raw.centro_centro_flatfile (
+CREATE EXTERNAL TABLE companyretail_datalake_dev_raw.centro_centro_flatfile (
 operacion_cd VARCHAR(1),
 centro_cd VARCHAR(10),
 centro_nombre VARCHAR(100),
@@ -29,4 +29,4 @@ sociedad_cd VARCHAR(4),
 virtual varchar(1), 
 descripcion_corta varchar(255))
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
-LOCATION 's3://companystream-datalake-dev-raw/centro_centro'
+LOCATION 's3://companyretail-datalake-dev-raw/centro_centro'

@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE companystream_datalake_dev_raw.parameters(
+CREATE EXTERNAL TABLE companyretail_datalake_dev_raw.parameters(
   interfacegroup varchar(65535) , 
   tabledatalake varchar(65535) , 
   tableflatfile varchar(65535) , 
@@ -7,4 +7,4 @@ CREATE EXTERNAL TABLE companystream_datalake_dev_raw.parameters(
   ispartition varchar(65535) , 
   partitioncolumn varchar(65535) )
 ROW FORMAT  serde 'org.openx.data.jsonserde.JsonSerDe'
-LOCATION 's3://companystream-datalake-dev-code/parameters'
+LOCATION 's3://companyretail-datalake-dev-code/parameters'

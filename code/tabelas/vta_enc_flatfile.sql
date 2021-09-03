@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE companystream_datalake_dev_raw.vta_enc_flatfile (
+CREATE EXTERNAL TABLE companyretail_datalake_dev_raw.vta_enc_flatfile (
 centro_cd VARCHAR(10),
 local_gestion VARCHAR(10),
 caja_nro VARCHAR(10),
@@ -47,4 +47,4 @@ zeta_nro VARCHAR(10),
 Fecha_fin_transaccion DATE,
 hora_fin_transaccion VARCHAR(20))
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
-LOCATION 's3://companystream-datalake-dev-raw/vta_enc'
+LOCATION 's3://companyretail-datalake-dev-raw/vta_enc'
