@@ -17,29 +17,33 @@ variable "environment" {
 
 
 variable "bucket_raw_data" {
-  default = "csancho-datalake-dev-raw"
+  default = "companystream-datalake-dev-raw"
 }
 
 variable "bucket_analytics_data" {
-  default = "csancho-datalake-dev-lake"
+  default = "companystream-datalake-dev-lake"
 }
 
 variable "bucket_arch_data" {
-  default = "csancho-datalake-dev-arch"
+  default = "companystream-datalake-dev-arch"
 }
 
 variable "bucket_code_data" {
-  default = "csancho-datalake-dev-code"
+  default = "companystream-datalake-dev-code"
 }
 
 variable "glue_database_raw" {
-  default = "csancho_datalake_dev_raw"
+  default = "companystream_datalake_dev_raw"
 }
 
 variable "glue_database_analytics" {
-  default = "csancho_datalake_dev_analytics"
+  default = "companystream_datalake_dev_analytics"
+}
+
+variable "glue_job_parquet" {
+  default = "job-companystream-datalake"
 }
 
 variable "lambda_function_name" {
-  default = "csancho-datalake-dev-create-athena"
+  default = "companystream-datalake-dev-create-athena"
 }

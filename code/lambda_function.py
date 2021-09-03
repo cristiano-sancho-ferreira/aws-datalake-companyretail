@@ -1,4 +1,4 @@
-# python lambda_function.py "{'database_name':'csancho_datalake_dev_raw','sql_files_directory':'.\\tabelas','athena_query_output':'s3://aws-athena-resultquery/'}"
+# python lambda_function.py "{'database_name':'companystream_datalake_dev_raw','sql_files_directory':'.\\tabelas','athena_query_output':'s3://aws-athena-resultquery/'}"
 
 
 import boto3

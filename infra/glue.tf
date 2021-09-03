@@ -8,7 +8,7 @@ resource "aws_glue_catalog_database" "glue_database_lake" {
 
 
 resource "aws_glue_job" "job-csancho" {
-  name         = "job-csancho-datalake"
+  name         = var.glue_job_parquet
   role_arn     = aws_iam_role.glue_role.arn
   max_capacity = 10
   glue_version = "2.0"
@@ -23,12 +23,12 @@ resource "aws_glue_job" "job-csancho" {
     "--environment"    = "dev"
     "--business"       = "datalake"
     "--interfacegroup" = "datalake_centro"
-    "--company"        = "csancho"
+    "--company"        = "companystream"
     "--job-language"   = "python"
   }
 
   tags = {
-    "projeto" = "cenco"
+    "projeto" = "companystream"
   }
 }
 

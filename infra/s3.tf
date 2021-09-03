@@ -15,7 +15,7 @@ resource "aws_s3_bucket" "lake_raw" {
   }
 
   tags = {
-    "projeto" = "cenco"
+    "projeto" = "companystream"
   }
 }
 
@@ -33,7 +33,7 @@ resource "aws_s3_bucket" "lake_analytics" {
   }
 
   tags = {
-    "projeto" = "cenco"
+    "projeto" = "companystream"
   }
 }
 
@@ -52,7 +52,7 @@ resource "aws_s3_bucket" "lake_arch" {
   }
 
   tags = {
-    "projeto" = "cenco"
+    "projeto" = "companystream"
   }
 }
 
@@ -70,7 +70,7 @@ resource "aws_s3_bucket" "lake_code" {
   }
 
   tags = {
-    "projeto" = "cenco"
+    "projeto" = "companystream"
   }
 }
 

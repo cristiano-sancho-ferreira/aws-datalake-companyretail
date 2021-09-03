@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE csancho_datalake_analytics_dev.vta_enc (
+CREATE EXTERNAL TABLE companystream_datalake_dev_analytics.vta_enc (
 local_gestion VARCHAR(10),
 caja_nro VARCHAR(10),
 transaccion_nro VARCHAR(20),
@@ -46,4 +46,4 @@ Fecha_fin_transaccion VARCHAR(10),
 hora_fin_transaccion VARCHAR(20))
 PARTITIONED BY (fecha_contable VARCHAR(10), centro_cd VARCHAR(10))
 STORED AS PARQUET
-LOCATION 's3://csancho-datalake-analytics-dev/vta_enc'
+LOCATION 's3://companystream-datalake-dev-lake/vta_enc'

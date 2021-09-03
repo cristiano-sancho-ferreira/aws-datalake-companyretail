@@ -11,7 +11,7 @@ resource "aws_lambda_function" "executa_athena" {
   runtime = "python3.8"
 
   tags = {
-    "projeto" = "cenco"
+    "projeto" = "companystream"
   }
 
 }

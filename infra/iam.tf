@@ -3,7 +3,7 @@
 ###############
 
 resource "aws_iam_role" "glue_role" {
-  name = "CSanchoGlueJobRole"
+  name = "CompanyStreamGlueJobRole"
 
 
   assume_role_policy = <<EOF
@@ -30,7 +30,7 @@ EOF
 
 
 resource "aws_iam_policy" "glue_policy" {
-  name        = "CSanchoAWSGlueServiceRole"
+  name        = "CompanyStreamAWSGlueServiceRole"
   path        = "/"
   description = "Policy for AWS Glue service role which allows access to related services including EC2, S3, and Cloudwatch Logs"
 
@@ -133,7 +133,7 @@ resource "aws_iam_role_policy_attachment" "glue_attach" {
 
 
 resource "aws_iam_role" "lambda" {
-  name = "CencoLambdaRole"
+  name = "CompanyStreamLambdaRole"
 
   assume_role_policy = <<EOF
 {
@@ -160,7 +160,7 @@ EOF
 
 
 resource "aws_iam_policy" "lambda" {
-  name        = "CencoAWSLambdaBasicExecutionRolePolicy"
+  name        = "CompanyStreamAWSLambdaExecutionRolePolicy"
   path        = "/"
   description = "Provides write permissions to CloudWatch Logs, S3 buckets and EMR Steps"
 
