@@ -1,3 +1,3 @@
-# datalake-framework-aws
+# Datalake automatizado
 
-## Executar carga de Datalake com Glue
+Um pipeline de carga que utiliza os serviços S3, Athena, Glue e Athena.
