@@ -13,6 +13,7 @@ resource "aws_glue_job" "job-csancho" {
   max_capacity = 10
   glue_version = "2.0"
 
+
   command {
     script_location = "s3://${aws_s3_bucket.lake_code.id}/code/job_data_lake_glue.py"
     python_version  = 3
