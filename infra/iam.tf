@@ -3,7 +3,7 @@
 ###############
 
 resource "aws_iam_role" "glue_role" {
-  name = "CompanyStreamGlueJobRole"
+  name = "CompanyRetailGlueJobRole"
 
 
   assume_role_policy = <<EOF
@@ -30,7 +30,7 @@ EOF
 
 
 resource "aws_iam_policy" "glue_policy" {
-  name        = "CompanyStreamAWSGlueServiceRole"
+  name        = "CompanyRetailAWSGlueServiceRole"
   path        = "/"
   description = "Policy for AWS Glue service role which allows access to related services including EC2, S3, and Cloudwatch Logs"
 
@@ -89,7 +89,7 @@ resource "aws_iam_policy" "glue_policy" {
             "Effect": "Allow",
             "Action": [
                 "logs:CreateLogGroup",
-                "logs:CreateLogStream",
+                "logs:CreateLogRetail",
                 "logs:PutLogEvents"
             ],
             "Resource": [
@@ -133,7 +133,7 @@ resource "aws_iam_role_policy_attachment" "glue_attach" {
 
 
 resource "aws_iam_role" "lambda" {
-  name = "CompanyStreamLambdaRole"
+  name = "CompanyRetailLambdaRole"
 
   assume_role_policy = <<EOF
 {
@@ -160,7 +160,7 @@ EOF
 
 
 resource "aws_iam_policy" "lambda" {
-  name        = "CompanyStreamAWSLambdaExecutionRolePolicy"
+  name        = "CompanyRetailAWSLambdaExecutionRolePolicy"
   path        = "/"
   description = "Provides write permissions to CloudWatch Logs, S3 buckets and EMR Steps"
 
@@ -172,7 +172,7 @@ resource "aws_iam_policy" "lambda" {
             "Effect": "Allow",
             "Action": [
                 "logs:CreateLogGroup",
-                "logs:CreateLogStream",
+                "logs:CreateLogRetail",
                 "logs:PutLogEvents"
             ],
             "Resource": "*"
