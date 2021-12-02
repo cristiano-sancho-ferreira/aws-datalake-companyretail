@@ -1,5 +1,2 @@
-# datalake-framework-aws
+# Datalake automatizado
 
-## Executar carga de Datalake com Glue
-
-# Exemplo projeto Cenco
