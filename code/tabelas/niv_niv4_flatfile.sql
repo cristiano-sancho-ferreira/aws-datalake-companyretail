@@ -6,4 +6,4 @@ fecha_novedad DATE,
 merc_nivel4_desc VARCHAR(100),
 merc_nivel3_cd VARCHAR(16))
 ROW FORMAT DELIMITED FIELDS TERMINATED BY '|'
-LOCATION 's3://companyretail-datalake-raw-dev/niv_niv4'
+LOCATION 's3://companyretail-datalake-dev-raw/niv_niv4'
