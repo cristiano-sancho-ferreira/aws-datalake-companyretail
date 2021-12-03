@@ -23,7 +23,7 @@ resource "aws_glue_job" "job-csancho" {
     "--environment"    = "dev"
     "--business"       = "datalake"
     "--interfacegroup" = "datalake_centro"
-    "--company"        = "companystream"
+    "--company"        = "companyretail"
     "--job-language"   = "python"
   }
 
