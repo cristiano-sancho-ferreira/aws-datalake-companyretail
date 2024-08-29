@@ -1,6 +1,6 @@
 ###########################################################################################
 ## SHELL      : cpp_cpp_migracion.sh
-## Autor      : jackson.silva(4strategies)
+## Autor      : Silva
 ## Finalidad  : Script que hace inserción de la en migración
 ## Parámetros : $1 - BEGIN_DATE
 ##              $2 - END_DATE

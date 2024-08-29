@@ -1,7 +1,7 @@
 #!/bin/ksh
 #########################################################################################################################################################
 ## SHELL      : DDL_DL_prov_csg.sh
-## Autor      : Jackson.Silva(ST IT Consulting)
+## Autor      : Silva
 ## Finalidad  : Crear las tablas externas de Data Raw y Data Lake
 ## 		
 ## ParÃ¡metros : No Hay
