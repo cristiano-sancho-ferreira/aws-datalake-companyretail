@@ -4,7 +4,7 @@
 
 Este repositório contém a documentação e scripts relacionados a uma arquitetura de ingestão, processamento e análise de dados utilizando serviços da AWS. A solução foi projetada para integrar dados provenientes de um ambiente on-premises com a AWS, garantindo um fluxo eficiente e seguro de dados desde a captura inicial até a visualização final.
 
-![alt text](image.png)
+![alt text](image-1.png)
 
 Visão Geral da Arquitetura
 On-Premises: Dados são inicialmente armazenados em servidores on-premises, com arquivos sendo transferidos para a AWS.
