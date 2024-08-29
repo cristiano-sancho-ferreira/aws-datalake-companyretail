@@ -1,6 +1,6 @@
 ###########################################################################################
 ## SHELL      : ConverteInterfaces.sh
-## Autor      : Alam(ST IT Consulting)
+## Autor      : Sancho
 ## Finalidad  : Script genérico de carga historica para formato Parquet e las interfaces de origene.
 ## Parâmetros : Não Há
 ## Retorno    : 0 - OK
